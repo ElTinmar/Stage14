@@ -1,11 +1,13 @@
 #include "hitList.h"
 
 HitList::HitList(int t, MemeObj m, Dictionnaire d) { 
-
+	
 	taille_voisinage = t; 
+	dictionnaire = d; 
+	meme = m; 
 	motifs = m.motifs_altname();
-	meme = m;
-	dictionnaire = d;
+	affichage.add_l_sequences(dictionnaire.sequence_length_distrib());
+	affichage.add_name_index(meme.name_index());
 }
 
 ostream &operator<<(ostream &flux, HitList const& d) {
@@ -21,6 +23,16 @@ void HitList::afficher(ostream& flux) const {
 					 it++) {
 					 
 		flux << *it << "\n";
+	}
+}
+
+void HitList::to_hitlist(ostream& flux) const {
+
+	for(auto it=collection_clusters.begin();
+					 it!=collection_clusters.end();
+					 it++) {
+					 
+		it->to_hit(flux);
 	}
 }
 
@@ -75,6 +87,57 @@ void HitList::afficher_annuaire2(ostream& flux) {
 				}
 			}
 		}
+	}
+}
+
+void HitList::clear_overlap(ostream& flux) {
+
+	set<Cluster> clear_cluster_collection;
+	Cluster min_cluster;
+	
+	for (auto annuaire_it = annuaire2.begin(); 
+					 	annuaire_it != annuaire2.end();
+					  annuaire_it++) {
+					 
+		for (auto sequence_it = annuaire_it->second.begin();
+							sequence_it != annuaire_it->second.end();
+							sequence_it++) {
+							
+			for (auto paire_it = sequence_it->second.begin();
+								paire_it != sequence_it->second.end();
+								paire_it++) {
+								
+				for (auto brin_it = paire_it->second.begin();
+									brin_it != paire_it->second.end();
+									brin_it++) {
+					
+					min_cluster = *(brin_it->second);
+					
+					for (auto chev_it = brin_it->second->chevauchants.begin();
+										chev_it != brin_it->second->chevauchants.end();
+										chev_it++) {
+						
+						if( (*chev_it)->nom_motif == brin_it->second->nom_motif ) {
+							
+							if( (*chev_it)->q_value <= brin_it->second->q_value ) {
+							
+								min_cluster = **chev_it;
+							}
+						}
+					}
+
+					clear_cluster_collection.insert(min_cluster);
+				}
+			}
+		}
+	}
+	
+	flux << "#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence\n";
+	for(auto it = clear_cluster_collection.begin();
+					 it != clear_cluster_collection.end();
+					 it++) {
+					 
+		 it->to_hit(flux);				 
 	}
 }
 

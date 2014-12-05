@@ -1,5 +1,7 @@
 #include "cluster.h"
 
+Cluster::Cluster() {}
+
 Cluster::Cluster(string n_seq,string r_mtf,string n_mtf,int i_mtf,string strd,
 	int strt,int stp,double scr, double q_val, string mseq) :
 	
@@ -26,6 +28,11 @@ bool operator==(Cluster const& c1, Cluster const& c2) {
 	return c1.egal(c2);
 }
 
+bool operator<(Cluster const& c1, Cluster const& c2) {
+
+	return c1.inf(c2);
+}
+
 bool Cluster::egal(Cluster c) const {
 
 	return ( (nom_sequence == c.nom_sequence) &&
@@ -33,6 +40,21 @@ bool Cluster::egal(Cluster c) const {
 					 (start == c.start) &&
 					 (stop == c.stop) &&
 					 (strand == c.strand) );
+}
+
+bool Cluster::inf(Cluster c) const {
+
+	return ( ( (nom_sequence == c.nom_sequence) && (start < c.start) ) ||
+					 ( (nom_sequence == c.nom_sequence) && 
+					 	 (start == c.start) &&
+					 	 lexicographical_compare(
+					 			nom_motif.begin(),nom_motif.end(),
+					 			c.nom_motif.begin(),c.nom_motif.end() ) 
+					 	) ||
+					 ( lexicographical_compare(
+					 			nom_sequence.begin(),nom_sequence.end(),
+					 			c.nom_sequence.begin(),c.nom_sequence.end() ) )
+				);
 }
 
 void Cluster::afficher(ostream& flux) const {
@@ -73,6 +95,18 @@ void Cluster::afficher(ostream& flux) const {
 	}
 	
 	flux << endl;
+}
+
+void Cluster::to_hit(ostream& flux) const {
+
+	flux << ref_motif << "\t"
+			 << nom_sequence << "\t"
+			 << start << "\t"
+			 << stop << "\t"
+			 << strand << "\t"
+			 << score << "\t"
+			 << q_value << "\t"
+			 << matched_seq << endl;
 }
 
 // Si il y a déjà un exemplaire du motif dans le voisinage, on n'en rajoute pas

@@ -31,7 +31,8 @@ void usage(char* nom)
        << "\t\t s couples présents par séquence\n"
        << "\t\t i motifs individuels présents par séquence\n"
        << "\t\t d afficher les motifs au format SVG\n"
-       << "\t\t v afficher dans l'ordre des sequences"
+       << "\t\t v afficher dans l'ordre des sequences\n"
+       << "\t\t x nettoyer motifs autochevauchants"
        << endl << endl;
        
   exit(EXIT_FAILURE);
@@ -76,6 +77,9 @@ int main(int argc, char** argv)
   	case 'k':
   		option=7;
   		break;
+  	case 'x':
+  		option=8;
+  		break;
   	default:
   		usage(argv[0]);
   		break;
@@ -89,6 +93,7 @@ int main(int argc, char** argv)
   if(option == 5) hitList.to_svg();
   if(option == 6) hitList.afficher_annuaire2(cout);
   if(option == 7) dico.cat(cout);
+  if(option == 8) hitList.clear_overlap(cout);
   
   return 0;
 }

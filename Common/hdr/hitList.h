@@ -23,10 +23,12 @@ class HitList
   
   					 HitList								(int, MemeObj, Dictionnaire);
   void       afficher            		(ostream&) const;
+  void       to_hitlist            	(ostream&) const;
   void			 afficher_annuaire			(ostream&);
   void			 afficher_annuaire2			(ostream&);
   void       add_element         		(Cluster);
   void 			 construire_voisinages	();
+  void 			 clear_overlap					(ostream&); 
   void			 to_svg									();
   
   static HitList load_hitFile			  (string,int, MemeObj, Dictionnaire);

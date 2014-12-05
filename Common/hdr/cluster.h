@@ -7,6 +7,7 @@
 #include <tuple>
 #include <string>
 #include <cstdlib>
+#include <algorithm>
 #include <fstream>
 
 using namespace std;
@@ -18,11 +19,14 @@ class Cluster
 	
   public:
   
+  							Cluster				();
   							Cluster				(string,string,string,int,string,int,int,double,double,string);
   void      		afficher      (ostream&) const;
   bool          egal          (Cluster) const;
+  bool          inf          	(Cluster) const;
   void					add_vois			(list<Cluster>::iterator);
   void					to_svg				(ostream&);
+  void					to_hit				(ostream&) const;
   
   private:
   
@@ -44,5 +48,6 @@ class Cluster
 
 ostream &operator<<(ostream &flux, Cluster const& d);
 bool operator==(Cluster const&, Cluster const&);
+bool operator<(Cluster const&, Cluster const&);
 
 #endif
