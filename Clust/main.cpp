@@ -31,7 +31,7 @@ void usage(char* nom)
        << "\t\t s couples présents par séquence\n"
        << "\t\t i motifs individuels présents par séquence\n"
        << "\t\t d afficher les motifs au format SVG\n"
-       << "\t\t v afficher dans l'ordre des sequences\n"
+       << "\t\t v afficher dans l'ordre des sequences"
        << endl << endl;
        
   exit(EXIT_FAILURE);
