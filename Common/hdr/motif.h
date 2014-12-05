@@ -15,7 +15,7 @@ using namespace std;
 
 class Motif
 {
-	friend class memeObj;
+	friend class MemeObj;
 	
 	public:
 									Motif							(string,Pwm);

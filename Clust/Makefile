@@ -8,6 +8,7 @@ PARSETOOLS_DIR = $(COMMON_DIR)/parse_utils
 SRCDIR = $(COMMON_DIR)/src
 HDRDIR = $(COMMON_DIR)/hdr
 INCLUDES = -I $(COMMON_DIR)/hdr -I $(COMMON_DIR)/parse_utils
+
 ifeq ($(DEBUG),yes)
 	CFLAGS=-W -Wall -ansi -pedantic -g -std=c++0x $(INCLUDES)
 	LDFLAGS=
@@ -18,13 +19,13 @@ endif
 
 all: parse_tools main
 
-main: main.o dictionnaire.o element.o lexer.o parser.o lexer_meme.o parser_meme.o cluster.o dom.o memeObj.o motif.o pwm.o affichage.o
+main: main.o dictionnaire.o element.o lexer.o parser.o lexer_meme.o parser_meme.o cluster.o hitList.o memeObj.o motif.o pwm.o affichage.o
 	$(CXX) -o clust $^
 
 main.o: main.cpp parser.cpp lexer.cpp
 	$(CXX) -c $(CFLAGS) $< -o $@
 	
-$(OBJDIR)/dom.o: dom.cpp cluster.cpp dom.h cluster.h
+$(OBJDIR)/hitList.o: hitList.cpp cluster.cpp hitList.h cluster.h
 	$(CXX) -c $(CFLAGS) $< -o $@
 	
 $(OBJDIR)/cluster.o: cluster.cpp cluster.h
@@ -77,9 +78,9 @@ $(OBJDIR)/parser_meme.o:
 	
 clean:
 	$(MAKE) -C $(PARSETOOLS_DIR) clean
-	rm -f $(OBJDIR)/element.o $(OBJDIR)/dictionnaire.o $(OBJDIR)/memeObj.o $(OBJDIR)/motif.o $(OBJDIR)/pwm.o $(OBJDIR)/dom.o $(OBJDIR)/cluster.o $(OBJDIR)/affichage.o *.o
+	rm -f $(OBJDIR)/element.o $(OBJDIR)/dictionnaire.o $(OBJDIR)/memeObj.o $(OBJDIR)/motif.o $(OBJDIR)/pwm.o $(OBJDIR)/hitList.o $(OBJDIR)/cluster.o $(OBJDIR)/affichage.o *.o
 
 superclean:
 	$(MAKE) -C $(PARSETOOLS_DIR) clean
-	rm -f clust $(OBJDIR)/element.o $(OBJDIR)/dictionnaire.o $(OBJDIR)/memeObj.o $(OBJDIR)/motif.o $(OBJDIR)/pwm.o $(OBJDIR)/dom.o $(OBJDIR)/cluster.o $(OBJDIR)/affichage.o *.o
+	rm -f clust $(OBJDIR)/element.o $(OBJDIR)/dictionnaire.o $(OBJDIR)/memeObj.o $(OBJDIR)/motif.o $(OBJDIR)/pwm.o $(OBJDIR)/hitList.o $(OBJDIR)/cluster.o $(OBJDIR)/affichage.o *.o
 

@@ -12,8 +12,10 @@
 
 using namespace std;
 
-class memeObj
+class MemeObj
 {
+	friend class HitList;
+	
   public:
   void      					afficher            (ostream&) const;
   void								set_version					(string);
@@ -29,7 +31,7 @@ class memeObj
   map<string, int>		name_index					();
   set<string>					motifs_altname			();
   
-  static memeObj			load_meme						(string);
+  static MemeObj			load_meme						(string);
   
   private:
   string 								version;
@@ -39,6 +41,6 @@ class memeObj
   vector<Motif>					motifs;
 };
 
-ostream &operator<<(ostream &flux, memeObj const& d);
+ostream &operator<<(ostream &flux, MemeObj const& d);
 
 #endif

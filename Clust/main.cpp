@@ -11,7 +11,7 @@
 #include <set>
 #include "dictionnaire.h"
 #include "memeObj.h"
-#include "dom.h" 
+#include "hitList.h"
 
 using namespace std;
 
@@ -45,17 +45,10 @@ int main(int argc, char** argv)
   if (argc != 6) usage(argv[0]);
   
   //Parser les options
-	memeObj	meme = memeObj::load_meme(argv[1]);  
+	MemeObj	meme = MemeObj::load_meme(argv[1]);  
   Dictionnaire dico = Dictionnaire::load_fasta(argv[2]);
-  
-  ifstream hit_file(argv[3], std::ifstream::in);
-  if (!hit_file.is_open())
-  {
-    cerr << "erreur à l'ouverture de " << argv[3] << " en lecture" << endl;
-    exit(EXIT_FAILURE);
-  }
-  
   int l = atoi(argv[4]);
+  HitList hitList = HitList::load_hitFile(argv[3],l,meme,dico);
   
   switch(argv[5][0]) {
   
@@ -88,57 +81,14 @@ int main(int argc, char** argv)
   		break;
   }
   
-  if(option == 7) {
-  	dico.cat(cout);
-  	exit(EXIT_SUCCESS);
-  }
-  
-  string junk;
-
-  //remplissage de la table
-  Dom table(l, dico, meme);
-  string sequence_name;
-  string motif_ref;
-  string strand;
-  int start;
-  int stop;
-  while(hit_file >> motif_ref)
-  {
-    if(motif_ref.find("#")!=string::npos)
-    {
-    	getline(hit_file, junk);
-    	continue;
-    }
-    
-    hit_file >> sequence_name >> start >> stop >> strand;
-    getline(hit_file, junk);
-    
-    Cluster c(
-    	sequence_name, 
-    	motif_ref, 
-    	meme.ref_to_altname(motif_ref), 
-    	meme.ref_to_index(motif_ref), 
-    	strand, 
-    	start, 
-    	stop
-    );
-    
-    table.add_element(c);
-  }
-  
-  table.construire_voisinages();
-  
-  if(option == 0) cout << table;
-  if(option == 1) table.output_couples(table.compter_couples(),cout);
-	if(option == 2) table.output_pseudo_pal(table.compter_pseudo_pal(),cout);
-	if(option == 3) table.output_presence_couples_seq(table.presence_couples_par_seq(),cout);
-  if(option == 4) table.output_motifs_par_seq(table.motifs_par_seq(),cout);
-  if(option == 5) table.to_svg();
-  if(option == 6) table.afficher_annuaire2(cout);
+  if(option == 0) cout << hitList;
+  if(option == 1) hitList.output_couples(hitList.compter_couples(),cout);
+	if(option == 2) hitList.output_pseudo_pal(hitList.compter_pseudo_pal(),cout);
+	if(option == 3) hitList.output_presence_couples_seq(hitList.presence_couples_par_seq(),cout);
+  if(option == 4) hitList.output_motifs_par_seq(hitList.motifs_par_seq(),cout);
+  if(option == 5) hitList.to_svg();
+  if(option == 6) hitList.afficher_annuaire2(cout);
   if(option == 7) dico.cat(cout);
-  
-  //Fermer les fichiers avant de quitter
-  hit_file.close();
   
   return 0;
 }

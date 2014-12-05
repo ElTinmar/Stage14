@@ -1,15 +1,15 @@
 #include "memeObj.h"
 
-extern int mmparse(memeObj& meme);
+extern int mmparse(MemeObj& meme);
 extern FILE* mmin;
 
-ostream &operator<<(ostream &flux, memeObj const& mo) {
+ostream &operator<<(ostream &flux, MemeObj const& mo) {
 
   mo.afficher(flux);
   return flux;
 }
 
-void memeObj::afficher(ostream& flux) const {
+void MemeObj::afficher(ostream& flux) const {
 
 	flux << "Version : " << version << endl
 			 << "Alphabet : ";
@@ -40,36 +40,36 @@ void memeObj::afficher(ostream& flux) const {
 	}
 }
 
-void memeObj::set_version(string v) {
+void MemeObj::set_version(string v) {
 
 	version = v;
 }
 
-void memeObj::set_alphabet(string a) {
+void MemeObj::set_alphabet(string a) {
 
 	for(auto it=a.begin(); it!=a.end(); it++) {
 		alphabet.insert(*it);
 	}
 }
 
-void memeObj::add_strand(string s) {
+void MemeObj::add_strand(string s) {
 
 	strands.insert(s);
 }
 
-void memeObj::set_bg_frq(map<string, double> m) {
+void MemeObj::set_bg_frq(map<string, double> m) {
 	
 	bg_frequencies=m;
 }
 
-void memeObj::set_motifs(vector<Motif> v) {
+void MemeObj::set_motifs(vector<Motif> v) {
 
 	motifs = v;
 }
 
-memeObj memeObj::load_meme(string filename) {
+MemeObj MemeObj::load_meme(string filename) {
 
-	memeObj meme;
+	MemeObj meme;
 	FILE *input = fopen(filename.c_str(),"r");
 	
   if (input == NULL)
@@ -94,12 +94,12 @@ memeObj memeObj::load_meme(string filename) {
 	return meme;
 }
 
-const set<char>& memeObj::get_alphabet() const {
+const set<char>& MemeObj::get_alphabet() const {
 	
 	return alphabet;
 }
 
-void memeObj::entropy(ostream& flux) {
+void MemeObj::entropy(ostream& flux) {
 	
 	//sort by alt_name
 	map<string, pair<double, int> > resultat;
@@ -115,7 +115,7 @@ void memeObj::entropy(ostream& flux) {
 	}
 }
 
-string memeObj::ref_to_altname(string ref) {
+string MemeObj::ref_to_altname(string ref) {
 
 	for(auto it=motifs.begin(); it != motifs.end(); it++) {
 		if(it->identifier == ref) return it->alt_name;
@@ -123,7 +123,7 @@ string memeObj::ref_to_altname(string ref) {
 	return("");
 }
 
-int memeObj::ref_to_index(string ref) {
+int MemeObj::ref_to_index(string ref) {
 
 	for(auto it=motifs.begin(); it != motifs.end(); it++) {
 		if(it->identifier == ref) return (distance(motifs.begin(), it)+1);
@@ -131,7 +131,7 @@ int memeObj::ref_to_index(string ref) {
 	return(-1);
 }
 
-map<string, int> memeObj::name_index() {
+map<string, int> MemeObj::name_index() {
 
 	map<string, int> result;
 	for(auto it=motifs.begin(); it != motifs.end(); it++) {
@@ -140,7 +140,7 @@ map<string, int> memeObj::name_index() {
 	return result;
 }
 
-set<string> memeObj::motifs_altname() {
+set<string> MemeObj::motifs_altname() {
 
 	set<string> result;
 	for(auto it=motifs.begin(); it != motifs.end(); it++) {

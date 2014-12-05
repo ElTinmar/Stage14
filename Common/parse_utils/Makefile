@@ -1,5 +1,6 @@
 DEBUG=yes
 CXX=g++
+
 OBJDIR = ../obj
 VPATH = ../src:../hdr:../obj
 ifeq ($(DEBUG),yes)

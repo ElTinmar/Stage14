@@ -13,12 +13,12 @@ using namespace std;
 
 class Cluster
 {
-	friend class Dom;
+	friend class HitList;
 	friend class Affichage;
 	
   public:
   
-  							Cluster				(string,string,string,int,string,int,int);
+  							Cluster				(string,string,string,int,string,int,int,double,double,string);
   void      		afficher      (ostream&) const;
   bool          egal          (Cluster) const;
   void					add_vois			(list<Cluster>::iterator);
@@ -33,6 +33,9 @@ class Cluster
   string				strand;
   int 					start;
   int 					stop;
+  double				score;
+  double				q_value;
+  string				matched_seq;
   
   vector<list<Cluster>::iterator > voisinage;
   vector<list<Cluster>::iterator > doublons;

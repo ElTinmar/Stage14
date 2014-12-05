@@ -1,32 +1,30 @@
-#include "dom.h"
+#include "hitList.h"
 
-Dom::Dom(int t, Dictionnaire d, memeObj m) { 
+HitList::HitList(int t, MemeObj m, Dictionnaire d) { 
 
 	taille_voisinage = t; 
-	dictionnaire = d; 
-	meme = m; 
 	motifs = m.motifs_altname();
-	affichage.add_l_sequences(dictionnaire.sequence_length_distrib());
-	affichage.add_name_index(meme.name_index());
+	meme = m;
+	dictionnaire = d;
 }
 
-ostream &operator<<(ostream &flux, Dom const& d) {
+ostream &operator<<(ostream &flux, HitList const& d) {
 
   d.afficher(flux);
   return flux;
 }
 
-void Dom::afficher(ostream& flux) const {
+void HitList::afficher(ostream& flux) const {
 
-  for(auto it = collection_clusters.begin();
-  				 it != collection_clusters.end();
-  				 it++) {
-  				 
-    flux << *it << endl;
-  }
+	for(auto it=collection_clusters.begin();
+					 it!=collection_clusters.end();
+					 it++) {
+					 
+		flux << *it << "\n";
+	}
 }
 
-void Dom::afficher_annuaire(ostream& flux) {
+void HitList::afficher_annuaire(ostream& flux) {
 
 	for (auto annuaire_it = annuaire.begin(); 
 					 	annuaire_it != annuaire.end();
@@ -52,7 +50,7 @@ void Dom::afficher_annuaire(ostream& flux) {
 	}
 }
 
-void Dom::afficher_annuaire2(ostream& flux) {
+void HitList::afficher_annuaire2(ostream& flux) {
 
 	for (auto annuaire_it = annuaire2.begin(); 
 					 	annuaire_it != annuaire2.end();
@@ -80,7 +78,7 @@ void Dom::afficher_annuaire2(ostream& flux) {
 	}
 }
 
-void Dom::add_element(Cluster c) {
+void HitList::add_element(Cluster c) {
 
   collection_clusters.push_back(c);
   auto it=collection_clusters.end();
@@ -92,10 +90,11 @@ void Dom::add_element(Cluster c) {
   temp_map[c.strand][c.nom_motif]=it;
   annuaire2[c.nom_sequence].insert(make_pair(make_pair(c.start,c.stop), temp_map));
   mtf_index[c.nom_motif].push_back(it);
+  
   affichage.add_motif(c,dictionnaire);
 }
 
-void Dom::construire_voisinages() {
+void HitList::construire_voisinages() {
 
 	for(auto c_it = collection_clusters.begin();
 					 c_it != collection_clusters.end();
@@ -156,7 +155,7 @@ void Dom::construire_voisinages() {
 	}
 }
 
-map<string, set<string> >	Dom::motifs_par_seq() {
+map<string, set<string> >	HitList::motifs_par_seq() {
 	
 	map<string, set<string> > results;
 	for(auto it=collection_clusters.begin(); it!=collection_clusters.end(); it++){
@@ -165,7 +164,7 @@ map<string, set<string> >	Dom::motifs_par_seq() {
 	return(results);
 }
 
-void Dom::output_motifs_par_seq(map<string, set<string> > table, ostream& flux) {
+void HitList::output_motifs_par_seq(map<string, set<string> > table, ostream& flux) {
 	
 	for(auto it=table.begin(); it!=table.end(); it++){
 		flux << it->first << "\t";
@@ -177,7 +176,7 @@ void Dom::output_motifs_par_seq(map<string, set<string> > table, ostream& flux) 
 	}
 }
 
-map<string, map<string, int> > Dom::compter_couples() {
+map<string, map<string, int> > HitList::compter_couples() {
 
 	map<string, map<string, int> > results;
 	for(auto mtf_it1=motifs.begin(); mtf_it1!=motifs.end(); mtf_it1++) {
@@ -204,7 +203,7 @@ map<string, map<string, int> > Dom::compter_couples() {
 	return results;
 }
 
-map<string, set<pair<string, string> >	> Dom::presence_couples_par_seq() {
+map<string, set<pair<string, string> >	> HitList::presence_couples_par_seq() {
 
 	map<string, set<pair<string, string> >	> results;
 	for(auto a_it=annuaire.begin(); a_it!=annuaire.end(); a_it++) {
@@ -238,7 +237,7 @@ map<string, set<pair<string, string> >	> Dom::presence_couples_par_seq() {
 	return results;
 }
 
-void Dom::output_presence_couples_seq(map<string, set<pair<string, string> > > table, ostream& flux) {
+void HitList::output_presence_couples_seq(map<string, set<pair<string, string> > > table, ostream& flux) {
 
 	for(auto seq_it=table.begin(); seq_it != table.end(); seq_it++) {
 		
@@ -251,7 +250,7 @@ void Dom::output_presence_couples_seq(map<string, set<pair<string, string> > > t
 	}
 }
 
-void Dom::output_couples(map<string, map<string, int> > table, ostream& flux) {
+void HitList::output_couples(map<string, map<string, int> > table, ostream& flux) {
 
 	for(auto it1=motifs.begin(); it1!=motifs.end(); it1++) {
   
@@ -273,7 +272,7 @@ void Dom::output_couples(map<string, map<string, int> > table, ostream& flux) {
 // Compter pour chaque motif le nombre d'occurences qui chevauche entièrement ou
 // partiellement une ou plusieurs occurences du même motif sur le brin 
 // complémentaire
-map<string, int> Dom::compter_pseudo_pal() {
+map<string, int> HitList::compter_pseudo_pal() {
 	
 	map<string, int> results;
 	for(auto c_it=collection_clusters.begin();
@@ -295,7 +294,7 @@ map<string, int> Dom::compter_pseudo_pal() {
 	return results;
 }
 
-void Dom::output_pseudo_pal(map<string, int> table, ostream& flux) {
+void HitList::output_pseudo_pal(map<string, int> table, ostream& flux) {
   
   flux << "\t" << "compte" << endl;
   for(auto it1=motifs.begin(); it1!=motifs.end(); it1++) {
@@ -304,8 +303,62 @@ void Dom::output_pseudo_pal(map<string, int> table, ostream& flux) {
   }
 }
 
-void Dom::to_svg() {
+void HitList::to_svg() {
 
   affichage.svg();
 }
 
+HitList HitList::load_hitFile(string filename,int t, MemeObj m, Dictionnaire d) {
+
+	HitList hitList(t,m,d);
+	
+	ifstream hit_file(filename, std::ifstream::in);
+  if (!hit_file.is_open())
+  {
+    cerr << "erreur à l'ouverture de " << filename << " en lecture" << endl;
+    exit(EXIT_FAILURE);
+  }
+  
+  string junk;
+  string motif_ref;
+	string sequence_name;
+  int start;
+  int stop;
+  string strand;
+  double score;
+  double q_value;
+  string matched_seq;
+  
+  while(hit_file >> motif_ref)
+  {
+    if(motif_ref.find("#")!=string::npos)
+    {
+    	getline(hit_file, junk);
+    	continue;
+    }
+    
+    hit_file >> sequence_name >> start >> stop >> strand >> score >> q_value >> matched_seq;
+    getline(hit_file, junk);
+    
+    Cluster c(
+    	sequence_name, 
+    	motif_ref, 
+    	m.ref_to_altname(motif_ref), 
+    	m.ref_to_index(motif_ref), 
+    	strand, 
+    	start, 
+    	stop,
+    	score,
+    	q_value,
+    	matched_seq
+    );
+    
+    hitList.add_element(c);
+  }
+  
+  hitList.construire_voisinages();
+  
+  hit_file.close();
+  
+  return hitList;
+}

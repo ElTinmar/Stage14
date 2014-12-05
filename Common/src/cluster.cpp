@@ -1,7 +1,7 @@
 #include "cluster.h"
 
 Cluster::Cluster(string n_seq,string r_mtf,string n_mtf,int i_mtf,string strd,
-	int strt,int stp) :
+	int strt,int stp,double scr, double q_val, string mseq) :
 	
 	nom_sequence(n_seq),
 	ref_motif(r_mtf),
@@ -9,7 +9,10 @@ Cluster::Cluster(string n_seq,string r_mtf,string n_mtf,int i_mtf,string strd,
 	id_motif(i_mtf),
 	strand(strd),
 	start(strt),
-	stop(stp) 
+	stop(stp),
+	score(scr),
+	q_value(q_val),
+	matched_seq(mseq)
 	{}
 	
 ostream &operator<<(ostream &flux, Cluster const& c) {
@@ -39,6 +42,9 @@ void Cluster::afficher(ostream& flux) const {
 			 << "Brin : " << strand << endl
 			 << "Start : " << start << endl
 			 << "Stop : " << stop << endl
+			 << "Score : " << score << endl
+			 << "q-value : " << q_value << endl
+			 << "Matched Sequence : " << matched_seq << endl 
 			 << "Voisinage : " << endl;
 			 
 	for(auto v_it=voisinage.begin(); v_it!=voisinage.end(); v_it++)

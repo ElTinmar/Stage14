@@ -12,7 +12,7 @@
 using namespace std;
 
 int mmlex(void);
-int mmerror(memeObj& meme, const char* s);
+int mmerror(MemeObj& meme, const char* s);
 
 %}
 
@@ -35,7 +35,7 @@ int mmerror(memeObj& meme, const char* s);
 /*par défaut yyparse ne prends pas d'argument. %parse-param permet
 de changer ce comportement et d'éviter de déclarer des variables globales
 dans le cas où le main est séparé*/
-%parse-param {memeObj& meme} 
+%parse-param {MemeObj& meme} 
 %error-verbose
 %name-prefix "mm"
 %union {
@@ -329,7 +329,7 @@ url:
 
 %%
 
-int mmerror(memeObj& meme, const char *s) 
+int mmerror(MemeObj& meme, const char *s) 
 {
   cerr << "Erreur rencontree : " << s << endl;
   cerr << "Dernier token : " << mmlval.c << endl;
